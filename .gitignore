@@ -1,0 +1,10 @@
+node_modules
+lib
+dist
+build
+.vscode/settings.json
+coverage
+
+*.log
+*.lock
+*.tgz

@@ -1,0 +1,64 @@
+{
+  "name": "whisper-state-channel",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "author": "Ricardo Rius",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "dist",
+    "lib",
+    "src",
+    "LICENSE",
+    ".babelrc"
+  ],
+  "scripts": {
+    "test": "react-scripts test --env=jsdom",
+    "build:es5": "./node_modules/.bin/babel src -d lib",
+    "build:webpack": "./node_modules/.bin/webpack",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.4.3",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "ethr-did-registry": "^0.0.2",
+    "ganache-cli": "^6.1.0",
+    "jest": "^22.4.3",
+    "regenerator-runtime": "^0.11.1",
+    "standard": "^11.0.0",
+    "truffle-contract": "^3.0.5",
+    "web3": "^1.0.0-beta.34",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14"
+  },
+  "dependencies": {
+    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-runtime": "^6.26.0",
+    "buffer": "^5.1.0",
+    "did-jwt": "^0.0.8",
+    "did-resolver": "^0.0.4",
+    "ethjs-abi": "^0.2.1",
+    "ethjs-contract": "^0.1.9",
+    "ethjs-provider-http": "^0.1.6",
+    "ethjs-query": "^0.3.5",
+    "ethr-did": "^0.0.5",
+    "ethr-did-resolver": "^0.0.8",
+    "interval-promise": "^1.2.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-scripts": "1.1.4",
+    "truffle-hdwallet-provider": "^0.0.6"
+  }
+}
