@@ -29,6 +29,7 @@ class Channel {
         this.ethrDid = null;
         this.sendCount = 0;
         this.inData = [];
+        this.stoppedChannel = false;
 
         getWeb3.then(results => {
             this.web3 = results.web3;
@@ -50,9 +51,9 @@ class Channel {
         }).catch(console.log);
     }
 
-    // setChannel method
-    async init(){
-        let self = this;
+    
+    async open(){
+        const self = this;
 
         const setPublicKey = (topic, pubKey, delegateNum) =>
             new Promise(async (resolve, reject) => {
@@ -111,6 +112,7 @@ class Channel {
             })
  
         try{
+
             register({provider: self.provider, registry: self.registryAddress}); // used by resolver
             let signer  = await setSigner();
             let whispInit =  await self.whisper.init(self.topic).catch(console.log); 
@@ -119,14 +121,14 @@ class Channel {
             self.pubKey = whispInit.id.pubKey;
 
             // wait joining time;
-            let print = true;
+            let longStr = true;
             while(!self.signer2){ // add timeout
                 let delegate2 = await self.getIdPubKey(self.identity2, self.topic);
                 self.pubKey2 = delegate2.pubKey;
                 if(!delegate2.pubKey){
-                    if(print){
+                    if(longStr){
                         console.log("Waiting the other peer...");
-                        print = false;
+                        longStr = false;
                     }else{
                         console.log("...");
                     }
@@ -190,43 +192,85 @@ class Channel {
 
 
     async send(msg){
-        let jwt = await this.ethrDid.signJWT(msg).catch(console.log); 
-        let hash = this.web3.utils.sha3(JSON.stringify({jwt, nonce:this.sendCount}));
-        let info = {jwt,hash,nonce:this.sendCount};
-        let tx = await this.whisper.sendMessage(info,{pubKey:this.pubKey2}).catch(console.log);
-        this.sendCount ++; 
-        return {jwt,tx};
+        const self = this;
+        if (!self.stoppedChannel) {
+            let jwt = await self.ethrDid.signJWT(msg).catch(console.log); 
+            let hash = self.web3.utils.sha3(JSON.stringify({jwt, nonce:self.sendCount}));
+            let info = {jwt,hash,nonce:self.sendCount};
+            let tx = await self.whisper.sendMessage(info,{pubKey:self.pubKey2}).catch(console.log);
+            self.sendCount ++; 
+            return {jwt,tx};
+        }else {
+            return null;
+        }
     }
 
 
-    async open(){
-        let self = this;
+    async start(){
+        const self = this;
+        self.stoppedChannel = false;
         interval(async () => {
-            let messages = await self.whisper.receiveMessage().catch(console.log); 
-            if (messages.raw.length > 0){
-                //console.log(messages);
-                messages.data
-                .forEach(async (message) => {
-                        let data = await verifyJWT(message.jwt).catch(console.log);
-                        if(data.signer.ethereumAddress === self.signer2 && data.signer.owner === self.did2){
-                            //console.log(data.payload, "data")
-                            self.inData.push(
-                                {data: data.payload,
-                                signer: data.signer,
-                                jwt: data.jwt,
-                                nonce: message.nonce, 
-                                hash: message.hash} // jwt + nonce
-                            ); 
-                        }else{ console.log("Invalid message received in channel")}
+            if (self.stoppedChannel) {
+                    // dirty way to stop the interval, no other way.
+                    throw new Error("stopChannel")
+                }else {
+                    let messages = await self.whisper.receiveMessage().catch(console.log); 
+                    if (messages.raw.length > 0){
+                        //console.log(messages);
+                        messages.data
+                        .forEach(async (message) => {
+                            let data = await verifyJWT(message.jwt).catch(console.log);
+                            if(data.signer.ethereumAddress === self.signer2 && data.signer.owner === self.did2){
+                                //console.log(data.payload, "data")
+                                self.inData.push(
+                                    {data: data.payload,
+                                    signer: data.signer,
+                                    jwt: data.jwt,
+                                    nonce: message.nonce, 
+                                    hash: message.hash} // jwt + nonce
+                                ); 
+                            }else{ console.log("Invalid message received in channel")}
+                        })
                     }
-                )
-            }
+                }
         }, 100)
+        .catch(err => {
+            if(err.message === "stopChannel"){
+                return false;
+            } else {
+                console.log(err)
+            }
+        })
+        return true;
+    }
+
+    async pause(){ 
+        const self = this;
+        self.stoppedChannel = true 
+        return self.stoppedChannel;
     }
 
     async close(){
-        // revoke delegate and attribute
-        // stop open channel
+        const self = this;
+
+        self.stoppedChannel = true;
+        await self.ethrDid.revokeDelegate(self.signer);
+        
+        const id = await self.getIdPubKey(self.identity,self.topic);
+        const owner = await self.ethrDid.lookupOwner();
+        const name = "ChPubKey#" + self.topic + id.delegateNum;
+        self.registry.revokeAttribute(self.identity, name , id.pubKey,{from: owner});
+        
+        self.identity = null; 
+        self.identity2 =  null;
+        self.did =  null;
+        self.did2 =  null;
+        self.signer = null;
+        self.signer2 = null;
+        self.pubKey = null;
+        self.pubKey2 = null;  
+        
+        return true;
     }
 
     read(){
