@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import Terminal from 'terminal-in-react'
+import DidRegistryContract from 'ethr-did-registry'
+import contract from 'truffle-contract'
 import getWeb3 from './util/getWeb3'
 import {Topic} from './channel/channel'
 import {createChannel} from './channel/channel'
@@ -7,46 +10,82 @@ import {sleep} from './channel/channel'
 import './App.css';
 
 class App extends Component {
-	constructor(props) {
-		super(props);
 
-	this.handleClick = this.handleClick.bind(this);
-	  }
+    async init() {
+      const useWeb3 = () => getWeb3;
+      const results = await useWeb3();
+      let accounts = await getAccounts(results.web3);
+      let identity = accounts[0].toLowerCase();
+      //let identity2 = accounts[1].toLowerCase();
 
-    async handleClick() {
-        console.log('From handleClick()', this);
-        
-        const useWeb3 = () => getWeb3;
-        const results = await useWeb3();
-        let accounts = await getAccounts(results.web3);
-        let identity = accounts[0].toLowerCase();
-        //let identity2 = accounts[1].toLowerCase();
-        let registryAddress = '0x7bb50ecce063b4875ffb3e106f330decc8561508';
-        let msg = {
-            message: 'fire',
-            seq: 0,
-            address: identity
-        };
+      console.log("Deploy Test Ethr DID Registry.")
+      let registryAddress = await truffleDeploy(results.provider,accounts);
+      
+      let topic = Topic();
+      console.log("Topic: ",topic);
+      let channel = await createChannel({registryAddress: registryAddress, identity: identity, identity2: identity, topic});
+      
+      let ch = await channel.open()
+      console.log("Whisper Id: ",ch.whisperId);
 
-        let topic = Topic();
-        let channel = await createChannel({registryAddress,identity,identity2:identity, topic});
-        let ch = await channel.open()
-        let signer = ch.signer;
-        await channel.start();
-        await channel.send(msg);
-        await sleep(1)
-        console.log(channel.read());
-        await sleep(2)
-        await channel.close();
-}
+      await channel.start();
+
+      let msg = {message: "Hello World"};
+      await channel.send(msg);
+
+      console.log("Identity address: ", identity);
+      console.log("My Signer: ",ch.signer);
+
+      await sleep(3)
+      console.log("Received Message:",channel.read());
+
+      await sleep(2)
+      await channel.close();
+      console.log("Channel closed.")
+    }
 
 render() {
-    console.log('From render()', this);
     return (
-      <div>
-        <button onClick={() => this.handleClick()}>Start</button>
+      <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh"
+      }}
+      >
+      <Terminal
+        color='green'
+        backgroundColor='black'
+        barColor='gray'
+        style={{ fontWeight: "bold", fontSize: "1.0em" }}
+        commands={{
+          showmsg: () => 'Whisper two way communication channels',
+          init: this.init()
+        }}
+        descriptions={{
+          showmsg: 'shows a message'
+        }}
+        startState = 'maximised'
+        msg='Two way Ethereum Whisper channels using asymetric key encription. Public keys exchange on the Ethr DID registry.'
+      />
       </div>
     )
   }
 }
 export default App;
+
+
+async function truffleDeploy(provider,accounts){
+  //Deploy new testing contract on every run
+  const TDidReg = contract(DidRegistryContract);
+  TDidReg.setProvider(provider);
+
+  const Tregistry = await TDidReg.new({
+      from: accounts[0],
+      gasPrice: 1000000000,
+      gas: 4712388
+  })
+
+  return Tregistry.address;
+}

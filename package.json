@@ -1,29 +1,18 @@
 {
-  "name": "whisper-state-channel",
-  "version": "0.1.0",
+  "name": "whisper-channels",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "author": "Ricardo Rius",
   "license": "MIT",
   "private": true,
-  "files": [
-    "dist",
-    "lib",
-    "src",
-    "LICENSE",
-    ".babelrc"
-  ],
   "scripts": {
     "test": "react-scripts test --env=jsdom",
     "build:es5": "./node_modules/.bin/babel src -d lib",
-    "build:webpack": "./node_modules/.bin/webpack",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "eject": "react-scripts eject"
-  },
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true,
-    "testEnvironment": "node"
+    "eject": "react-scripts eject",
+    "geth-dev": "rm -fR .devNet/datadir/geth/ && geth --networkid=1337 --datadir=.devNet/datadir --port=30303 --rpc --rpcport=9545 --rpcaddr=localhost  --rpccorsdomain=\"*\" --nodiscover --maxpeers=0 --ws --wsport=9546 --wsaddr=localhost --wsorigins=\"*\" --mine --shh --rpcapi=eth,web3,net,debug,shh,personal --wsapi=eth,web3,net,shh,debug,personal --dev --dev.period 3 --targetgaslimit=4712388 --verbosity 5",
+    "geth-dev-unlock": "geth --exec 'loadScript(\"scripts/createbalances.js\")' attach .devNet/datadir/geth.ipc"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -59,6 +48,7 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-scripts": "1.1.4",
+    "terminal-in-react": "^4.3.0",
     "truffle-hdwallet-provider": "^0.0.6"
   }
 }

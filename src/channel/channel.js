@@ -51,7 +51,7 @@ class Channel {
         }).catch(console.log);
     }
 
-    
+    // TODO: add timeouts
     async open(){
         const self = this;
 
@@ -96,7 +96,7 @@ class Channel {
                 let signer = null;
                 while(!valid){  //add timeout
                     doc.publicKey.forEach(element => {
-                        let dPos = element.id.indexOf("-") //delegate number 
+                        let dPos = element.id.indexOf("-") 
                         let delNumIn = element.id.substring(dPos, element.id.length)
                         if(delNum === delNumIn && (element.id.match(/delegate/g) || []).length === 1){
                             valid = true; 
@@ -114,15 +114,18 @@ class Channel {
         try{
 
             register({provider: self.provider, registry: self.registryAddress}); // used by resolver
+            
+            console.log("Set Signer Delegate.");
             let signer  = await setSigner();
-            let whispInit =  await self.whisper.init(self.topic).catch(console.log); 
+            let whispInit =  await self.whisper.init(self.topic).catch(console.log);
+
+            console.log("Set Asymetric Key.");
             await setPublicKey(self.topic, whispInit.id.pubKey, signer.delNum)
             self.signer = signer.kp.address;
             self.pubKey = whispInit.id.pubKey;
 
-            // wait joining time;
             let longStr = true;
-            while(!self.signer2){ // add timeout
+            while(!self.signer2){ //add timeout
                 let delegate2 = await self.getIdPubKey(self.identity2, self.topic);
                 self.pubKey2 = delegate2.pubKey;
                 if(!delegate2.pubKey){
@@ -144,17 +147,16 @@ class Channel {
 
     }
 
-
+    // TODO: validate revoked attributes
     async getIdPubKey(identity,topic){
         try{
             let pubKey, delegateNum;
             const history = await changeLog(identity,this.eth,this.registryAddress,this.registry).catch(console.log); 
-            //console.log(history)
             history.forEach(event => {
                 if(event._eventName === 'DIDAttributeChanged' && (event.name.match(/ChPubKey/g) || []).length === 1){
                     let chPos = event.name.search("ChPubKey")
-                    let tPos = event.name.indexOf("#") //topic
-                    let dPos = event.name.indexOf("-") //delegate number
+                    let tPos = event.name.indexOf("#")
+                    let dPos = event.name.indexOf("-")
                     if( chPos === 0 &&  tPos === 8){
                         if(event.name.substring(tPos + 1, event.name.length - (event.name.length-dPos)) === topic){
                             pubKey = event.value;
@@ -211,23 +213,21 @@ class Channel {
         self.stoppedChannel = false;
         interval(async () => {
             if (self.stoppedChannel) {
-                    // dirty way to stop the interval, no other way.
+                    // no other way to stop the async interval.
                     throw new Error("stopChannel")
                 }else {
                     let messages = await self.whisper.receiveMessage().catch(console.log); 
                     if (messages.raw.length > 0){
-                        //console.log(messages);
                         messages.data
                         .forEach(async (message) => {
                             let data = await verifyJWT(message.jwt).catch(console.log);
                             if(data.signer.ethereumAddress === self.signer2 && data.signer.owner === self.did2){
-                                //console.log(data.payload, "data")
                                 self.inData.push(
                                     {data: data.payload,
                                     signer: data.signer,
                                     jwt: data.jwt,
                                     nonce: message.nonce, 
-                                    hash: message.hash} // jwt + nonce
+                                    hash: message.hash}
                                 ); 
                             }else{ console.log("Invalid message received in channel")}
                         })
@@ -254,8 +254,11 @@ class Channel {
         const self = this;
 
         self.stoppedChannel = true;
+        console.log("Revoke Signer Delegate.")
         await self.ethrDid.revokeDelegate(self.signer);
-        
+
+        await sleep(1); //Race condition, TODO: promisify
+        console.log("Revoke Asymetric Key.")
         const id = await self.getIdPubKey(self.identity,self.topic);
         const owner = await self.ethrDid.lookupOwner();
         const name = "ChPubKey#" + self.topic + id.delegateNum;
@@ -274,22 +277,27 @@ class Channel {
     }
 
     read(){
-        
-        var newArray = this.inData.slice();
-        return (newArray);
-        
+        return (this.inData);
     }
 }
 
 export default Channel;
 
+
+// TODO: validate to break cycle
 export const createChannel = (conf) =>
 new Promise(async (resolve, reject) => {
-    let channel = new Channel(conf)
+    let longStr = true;
+    let channel = new Channel(conf);
     while(channel.registry === null || channel.whisper === null || channel.ethrDid === null )
-    {  
-        console.log("Creating channel...");
-        await sleep(0.02); //validate to break cycle
+    {                      
+        if(longStr){
+            console.log("Creating channel...");
+            await sleep(0.1); 
+            longStr = false;
+        }else {
+            console.log("...");
+        }
     }
     resolve(channel)
     
