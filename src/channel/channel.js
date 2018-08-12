@@ -115,11 +115,11 @@ class Channel {
 
             register({provider: self.provider, registry: self.registryAddress}); // used by resolver
             
-            console.log("Set Signer Delegate.");
+            console.log("Set signer delegate.");
             let signer  = await setSigner();
             let whispInit =  await self.whisper.init(self.topic).catch(console.log);
 
-            console.log("Set Asymetric Key.");
+            console.log("Set Whisper asymmetric public key.");
             await setPublicKey(self.topic, whispInit.id.pubKey, signer.delNum)
             self.signer = signer.kp.address;
             self.pubKey = whispInit.id.pubKey;
@@ -254,11 +254,11 @@ class Channel {
         const self = this;
 
         self.stoppedChannel = true;
-        console.log("Revoke Signer Delegate.")
+        console.log("Revoke signer delegate.")
         await self.ethrDid.revokeDelegate(self.signer);
 
-        await sleep(1); //Race condition, TODO: promisify
-        console.log("Revoke Asymetric Key.")
+        await sleep(3); //Race condition, TODO: promisify
+        console.log("Revoke Whisper asymmetric public key.")
         const id = await self.getIdPubKey(self.identity,self.topic);
         const owner = await self.ethrDid.lookupOwner();
         const name = "ChPubKey#" + self.topic + id.delegateNum;

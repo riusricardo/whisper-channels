@@ -25,29 +25,20 @@ module.exports = {
     ganache: {
       get provider() {
         if (!provider) {
-          provider = TestRPC.provider({total_accounts: 25})
+          provider = TestRPC.provider({total_accounts: 15})
         }
         return provider
       },
-      network_id: "*"
-    },
-    coverage: {
-      host: "localhost",
       network_id: "*",
-      port: 8555,         // <-- Use port 8555
-      gas: 0xfffffffffff, // <-- Use this high gas value
-      gasPrice: 0x01      // <-- Use this low gas price
-    },
-    privateTest: {
-      host: "localhost",
-      port: 8544,
-      network_id: "234"
+      port: 7545,
+      gasPrice: 0x3B9ACA00
     },
     geth_dev: {
       host: "localhost",
       port: 9545,
       network_id: 1337,
-      gas: 4665264
+      gas: 4665264,
+      gasPrice: 0x3B9ACA00
     },
     ropsten: {
       get provider() {

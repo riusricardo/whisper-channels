@@ -1,13 +1,12 @@
 {
   "name": "whisper-channels",
   "version": "1.0.0",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "author": "Ricardo Rius",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "test": "react-scripts test --env=jsdom",
-    "build:es5": "./node_modules/.bin/babel src -d lib",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
@@ -15,26 +14,15 @@
     "geth-dev-unlock": "geth --exec 'loadScript(\"scripts/createbalances.js\")' attach .devNet/datadir/geth.ipc"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-jest": "^22.4.3",
-    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.1",
     "ethr-did-registry": "^0.0.2",
     "ganache-cli": "^6.1.0",
     "jest": "^22.4.3",
-    "regenerator-runtime": "^0.11.1",
-    "standard": "^11.0.0",
+    "truffle": "^4.1.13",
+    "truffle-hdwallet-provider": "^0.0.6",
     "truffle-contract": "^3.0.5",
-    "web3": "^1.0.0-beta.34",
-    "webpack": "^4.5.0",
-    "webpack-cli": "^2.0.14"
+    "web3": "^1.0.0-beta.34"
   },
   "dependencies": {
-    "babel-plugin-module-resolver": "^3.1.1",
-    "babel-runtime": "^6.26.0",
     "buffer": "^5.1.0",
     "did-jwt": "^0.0.8",
     "did-resolver": "^0.0.4",
@@ -48,7 +36,6 @@
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-scripts": "1.1.4",
-    "terminal-in-react": "^4.3.0",
-    "truffle-hdwallet-provider": "^0.0.6"
+    "terminal-in-react": "^4.3.0"
   }
 }
