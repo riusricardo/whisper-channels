@@ -1,5 +1,6 @@
 //import getWeb3 from '../util/getWeb3'
 import Web3 from 'web3'
+Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
 
 class Whisper {
     constructor () {
