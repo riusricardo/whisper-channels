@@ -1,0 +1,30 @@
+{
+  "config": {
+        "chainId": 1337,
+        "homesteadBlock": 0,
+        "eip155Block": 0,
+        "eip158Block": 0
+    },
+   "alloc" : 
+   {
+        "F18f16eEbAe0912a17885d743754C943b548a630": {"balance": "10000"},
+        "04C4b39e60ab3655af44Cb928ac0Da196188DD65": {"balance": "10000"},
+        "2eB6B952Af9ef44f376e799Ca44A76a28D3E8957": {"balance": "10000"},
+        "d84D3Cd384604375A115d697e838B5b4ed681c9d": {"balance": "10000"},
+        "1435B9664159Cc908d67C46B2F92EcB414ec8190": {"balance": "10000"},
+        "5FC5ceA687718FBDb529f19A2fffB621Aa828405": {"balance": "10000"},
+        "8d36227D3549846490FDF61E51a07CE5c84cFD56": {"balance": "10000"},
+        "CF2069750e3Ce70F971f7f0Af9538Af7Fd773E47": {"balance": "10000"},
+        "EeE054834b10C5c76E2E25c8B00B0499f2916dF2": {"balance": "10000"},
+        "EeE054834b10C5c76E2E25c8B00B0499f2916dF2": {"balance": "10000"}
+   },
+  "coinbase"   : "0x0000000000000000000000000000000000000000",
+  "difficulty" : "0x20000",
+  "extraData"  : "",
+  "gasLimit"   : "8000000",
+  "nonce"      : "0x0000000000000042",
+  "mixhash"    : "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "parentHash" : "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "timestamp"  : "0x00"
+}
+

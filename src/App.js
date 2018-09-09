@@ -8,16 +8,18 @@ import {getAccounts} from './channel/channel'
 import {sleep} from './channel/channel'
 import EthereumDIDRegistry from './contracts/EthereumDIDRegistry.json'
 
+
+
 class App extends Component {
 
     async init() {
       const useWeb3 = () => getWeb3;
       const results = await useWeb3();
-      let accounts = await getAccounts(results.web3);
+      let accounts = await getAccounts(results.web3Instance);
       let identity = accounts[0].toLowerCase();
       let identity2 = accounts[0].toLowerCase();
  
-      let registryAddress = await truffleDeployed(results.provider,accounts);
+      let registryAddress = await truffleDeployed(results.web3Provider,accounts);
       
       if(!registryAddress){
         console.log("Ethr DID registry not deployed.")
@@ -26,7 +28,7 @@ class App extends Component {
         let topic = Topic();
         console.log("Topic: ",topic);
         let channel = await createChannel({registryAddress, identity, identity2, topic});
-        
+
         let ch = await channel.open()
         console.log("Whisper Id: ",ch.whisperId);
 
@@ -61,6 +63,7 @@ render() {
         color='green'
         backgroundColor='black'
         barColor='gray'
+        allowTabs={false}
         style={{ fontWeight: "bold", fontSize: "1.0em" }}
         commands={{
           showmsg: () => 'Two way Ethereum Whisper communication channels',

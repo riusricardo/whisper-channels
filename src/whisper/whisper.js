@@ -1,24 +1,18 @@
-//import getWeb3 from '../util/getWeb3'
-import Web3 from 'web3'
-Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
+import getWeb3 from '../util/getWeb3'
 
 class Whisper {
     constructor () {
-/*
         getWeb3.then(results => {
-                this.web3 = results.web3;
-                this.provider = results.provider;
+                this.web3 = results.web3Fallback;
+                this.provider = results.providerFallback;
             }).catch(console.log);
-
-*/
-        this.provider = new Web3.providers.HttpProvider('http://localhost:9545')
-        this.web3 = new Web3(this.provider)
         this.asymKeyId = null;
         this.asymPubKey = null;
         this.asymPrivKey = null;
         this.msgFilter = null;
         this.topic = null;
-        this.recipientPubKey = null;     
+        this.recipientPubKey = null;    
+         
     }
 
     async init(topic){
