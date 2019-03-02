@@ -1,1 +1,0 @@
-../node_modules/ethr-did-registry/contracts/EthereumDIDRegistry.sol

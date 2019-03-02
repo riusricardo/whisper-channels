@@ -19,14 +19,13 @@
     "react-dom": "^16.8.2",
     "terminal-in-react": "^4.3.0",
     "truffle-react-scripts": "0.3.5",
-    "web3": "^1.0.0-beta.46"
+    "web3": "^1.0.0-beta.47"
   },
   "devDependencies": {
     "ethr-did-registry": "^0.0.3",
     "ganache-cli": "^6.3.0",
     "truffle-contract": "^4.0.7",
-    "truffle-hdwallet-provider": "^1.0.5",
-    "web3": "^1.0.0-beta.47"
+    "truffle-hdwallet-provider": "^1.0.5"
   },
   "scripts": {
     "start": "truffle-react-scripts start",
