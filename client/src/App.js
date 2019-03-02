@@ -15,6 +15,7 @@ class App extends Component {
     async init() {
       const useWeb3 = () => getWeb3;
       const results = await useWeb3();
+      console.log(results)
       let accounts = await getAccounts(results.web3Instance);
       let identity = accounts[0].toLowerCase();
       let identity2 = accounts[0].toLowerCase();

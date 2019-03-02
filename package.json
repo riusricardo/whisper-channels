@@ -1,14 +1,38 @@
 {
   "name": "whisper-channels",
-  "version": "1.0.0",
-  "main": "src/index.js",
+  "version": "2.0.0",
   "author": "Ricardo Rius",
   "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "buffer": "^5.2.1",
+    "did-jwt": "^0.1.1",
+    "did-resolver": "^0.0.6",
+    "ethjs-abi": "^0.2.1",
+    "ethjs-contract": "^0.2.3",
+    "ethjs-provider-http": "^0.1.6",
+    "ethjs-query": "^0.3.8",
+    "ethr-did": "^1.0.0",
+    "ethr-did-resolver": "^0.2.0",
+    "interval-promise": "^1.3.0",
+    "react": "^16.8.2",
+    "react-dom": "^16.8.2",
+    "terminal-in-react": "^4.3.0",
+    "truffle-react-scripts": "0.3.5",
+    "web3": "^1.0.0-beta.46"
+  },
+  "devDependencies": {
+    "ethr-did-registry": "^0.0.3",
+    "ganache-cli": "^6.3.0",
+    "truffle-contract": "^4.0.7",
+    "truffle-hdwallet-provider": "^1.0.5",
+    "web3": "^1.0.0-beta.47"
+  },
   "scripts": {
-    "test": "react-scripts test --env=jsdom",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
+    "start": "truffle-react-scripts start",
+    "build": "truffle-react-scripts build",
+    "test": "truffle-react-scripts test",
+    "eject": "truffle-react-scripts eject",
     "ganache-dev": "ganache-cli -a=10 -p=8545 -i=1335 -l=8000000 -g=1000000000 -m='coffee slogan task clinic begin rocket rabbit despair tank kid hire quiz'",
     "geth-dev:whisper": "yarn geth-dev:delete && geth --networkid=1337 --datadir=.dev/datadir --shh --ws --wsport=8546 --wsaddr=localhost --wsorigins=\"*\" --wsapi=eth,web3,net,shh,debug,personal --nodiscover --maxpeers=0 --dev",
     "geth-dev:delete": "rm -fR .dev/datadir/geth/",
@@ -20,29 +44,13 @@
     "geth-dev:priv-chain": " geth --networkid=1337 --datadir=.dev/datadir --unlock f18f16eebae0912a17885d743754c943b548a630,04c4b39e60ab3655af44cb928ac0da196188dd65,2eb6b952af9ef44f376e799ca44a76a28d3e8957,d84d3cd384604375a115d697e838b5b4ed681c9d,1435b9664159cc908d67c46b2f92ecb414ec8190,5fc5cea687718fbdb529f19a2fffb621aa828405,8d36227d3549846490fdf61e51a07ce5c84cfd56,cf2069750e3ce70f971f7f0af9538af7fd773e47,eee054834b10c5c76e2e25c8b00b0499f2916df2,46bbce669bd8b37660695d4f863da4665079c596 --password config/dev_pass.txt --cache=1024 --cache.database=75 --port=30303 --rpc --rpcport=8545 --rpcaddr=localhost  --rpccorsdomain=\"*\" --nodiscover --maxpeers=0 --ws --wsport=8546 --wsaddr=localhost --wsorigins=\"*\" --mine --minerthreads=1 --etherbase=0xf18f16eebae0912a17885d743754c943b548a630  --shh --rpcapi=eth,web3,net,debug,shh,personal --wsapi=eth,web3,net,shh,debug,personal --gpopercentile=60 --gpoblocks=20 --targetgaslimit=800000000 --gasprice=1000000000 --ethash.dagdir=.dev/datadir/geth/ --ethash.cachedir=.dev/datadir/geth/ --ethash.dagsinmem=1 --ethash.dagsondisk=1",
     "geth-priv": "yarn geth-dev:remove &&  yarn run geth-dev:init && yarn geth-dev:priv-chain"
   },
-  "devDependencies": {
-    "ethr-did-registry": "^0.0.3",
-    "ganache-cli": "^6.1.6",
-    "jest": "^22.4.3",
-    "truffle": "^4.1.14",
-    "truffle-contract": "^3.0.6",
-    "truffle-hdwallet-provider": "^0.0.6",
-    "web3": "^1.0.0-beta.35"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "dependencies": {
-    "buffer": "^5.1.0",
-    "did-jwt": "^0.0.8",
-    "did-resolver": "^0.0.4",
-    "ethjs-abi": "^0.2.1",
-    "ethjs-contract": "^0.2.3",
-    "ethjs-provider-http": "^0.1.6",
-    "ethjs-query": "^0.3.8",
-    "ethr-did": "^1.0.0",
-    "ethr-did-resolver": "^0.1.1",
-    "interval-promise": "^1.2.0",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-scripts": "^1.1.4",
-    "terminal-in-react": "^4.3.0"
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
