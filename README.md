@@ -1,5 +1,3 @@
-### :warning: Whisper is an experimental technology. :warning:
-
 # whisper-channels
 Decentralized bidirectional communication protocol layer. Exchanging Ethereum Whisper asymetric public keys on the Ethr DID registry.
 
@@ -8,7 +6,7 @@ Decentralized bidirectional communication protocol layer. Exchanging Ethereum Wh
 * [Geth 1.8+](https://github.com/ethereum/go-ethereum/releases)
 * [NodeJS](https://nodejs.org/en/download/package-manager/)
 * [Yarn](https://yarnpkg.com/lang/en/docs/install/)
-* [Truffle Framework 4.1.14+](https://truffleframework.com/truffle)
+* [Truffle Framework](https://truffleframework.com/truffle)
 * [Ganache-cli](https://github.com/trufflesuite/ganache-cli)
 
 ## Installation
@@ -21,7 +19,7 @@ Decentralized bidirectional communication protocol layer. Exchanging Ethereum Wh
 
 ```sh
 (Terminal 2)$ yarn geth-dev
-(Terminal 1)$ truffle migrate --network geth_dev
+(Terminal 1)$ truffle migrate --network local_dev
 (Terminal 1)$ yarn start
 ```
 ## Contributing

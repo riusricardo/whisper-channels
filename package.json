@@ -22,12 +22,12 @@
   },
   "devDependencies": {
     "ethr-did-registry": "^0.0.3",
-    "ganache-cli": "^6.1.6",
+    "ganache-cli": "^6.4.3",
     "jest": "^22.4.3",
-    "truffle": "^4.1.14",
-    "truffle-contract": "^3.0.6",
-    "truffle-hdwallet-provider": "^0.0.6",
-    "web3": "^1.0.0-beta.35"
+    "truffle": "^5.0.13",
+    "truffle-contract": "^4.0.12",
+    "truffle-hdwallet-provider": "^1.0.7",
+    "web3": "^1.0.0-beta.38"
   },
   "dependencies": {
     "buffer": "^5.1.0",

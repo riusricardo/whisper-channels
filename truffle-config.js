@@ -1,18 +1,42 @@
-/*
- * NB: since truffle-hdwallet-provider 0.0.5 you must wrap HDWallet providers in a 
- * function when declaring them. Failure to do so will cause commands to hang. ex:
- * ```
- * mainnet: {
- *     provider: function() { 
- *       return new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/<infura-key>') 
- *     },
- *     network_id: '1',
- *     gas: 4500000,
- *     gasPrice: 10000000000,
- *   },
- */
+'use strict'
+const path = require("path");
+const ganacheRPC = require('ganache-cli');
+let provider;
 
 module.exports = {
-  // See <http://truffleframework.com/docs/advanced/configuration>
-  // to customize your Truffle configuration!
+  contracts_build_directory: path.join(__dirname, "client/src/contracts"),
+  compilers: {
+    solc: {
+      version: "0.5.7",
+      optimizer: {
+        enabled: false,
+        runs: 200
+      }
+    }
+  },
+  networks: {
+    ganache: {
+      get provider () {
+        if (!provider) {
+          provider = ganacheRPC.provider({
+            total_accounts: 10,
+            network_id: 1335,
+            gasLimit: 8000000,
+            gasPrice: 1000000000
+          });
+        }
+        return provider;
+      },
+      network_id: 1335,
+      gas: 8000000,
+      gasPrice: 1000000000
+    },
+    local_dev: {
+      host: 'localhost',
+      network_id: 1337,
+      port: 9545,
+      gas: 6283185, // geth --dev gas limit
+      gasPrice: 1000000000
+    }
+  }
 };
