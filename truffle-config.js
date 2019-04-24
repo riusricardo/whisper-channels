@@ -4,10 +4,10 @@ const ganacheRPC = require('ganache-cli');
 let provider;
 
 module.exports = {
-  contracts_build_directory: path.join(__dirname, "client/src/contracts"),
+  contracts_build_directory: path.join(__dirname, "src/contracts"),
   compilers: {
     solc: {
-      version: "0.5.7",
+      version: "0.4.24",
       optimizer: {
         enabled: false,
         runs: 200

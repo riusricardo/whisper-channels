@@ -1,6 +1,7 @@
 # seed
 #key.json
 build/
+src/contracts/
 .dev/datadir/geth
 
 *.lock
